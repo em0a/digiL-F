@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claimed Items - PUPSMB DIGILOF</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --red: #8c1d18;
+            --red-strong: #a32620;
+            --red-glow: rgba(180, 40, 40, 0.6);
+            --glass-red: rgba(140, 29, 24, 0.2);
+            --glass-dark: rgba(0, 0, 0, 0.6);
+            --accent-white: rgba(255, 255, 255, 0.1);
+        }
+
+        * { 
+            box-sizing: border-box; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+            background: #000;
+        }
+
+        .background {
+            min-height: 100vh;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05), rgba(0,0,0,0.9)),
+                        linear-gradient(rgba(40,0,0,0.8), rgba(0,0,0,0.9)),
+                        url('images/DSA.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 60px 20px;
+        }
+
+        /* NEW STYLE FOR RETURN BUTTON */
+        .nav-header {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .home-link {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 12px 24px;
+            border-radius: 15px;
+            background: var(--glass-red);
+            border: 1px solid var(--accent-white);
+            backdrop-filter: blur(10px);
+        }
+
+        .home-link:hover {
+            color: #fff;
+            background: var(--red);
+            border-color: var(--red);
+            transform: translateX(-5px);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--glass-red);
+            padding: 40px;
+            border-radius: 40px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--accent-white);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+        }
+
+        h2 {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            text-align: center;
+            text-transform: uppercase;
+            background: linear-gradient(to bottom, #fff 50%, var(--red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Item Card Styling */
+        .item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--accent-white);
+            padding: 24px;
+            border-radius: 30px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .item img {
+            width: 240px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            border: 1px solid var(--accent-white);
+        }
+
+        .item-content h3 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .item-content small {
+            font-size: 14px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.7);
+            display: block;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 30px;
+            border-radius: 20px;
+            border: none;
+            background: var(--red);
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px var(--red-glow);
+        }
+
+        button:hover {
+            background: var(--red-strong);
+            transform: translateY(-2px);
+        }
+
+        /* MODAL STYLES */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(15px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: rgba(20, 20, 20, 0.95);
+            padding: 40px;
+            border-radius: 35px;
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid var(--red);
+            box-shadow: 0 0 60px rgba(140,29,24,0.5);
+            text-align: center;
+        }
+
+        input, textarea {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--accent-white);
+            border-radius: 15px;
+            padding: 15px;
+            color: #fff;
+            margin-bottom: 15px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        input:focus, textarea:focus { border-color: var(--red); }
+
+        /* RECEIPT STYLES */
+        .receipt-data {
+            text-align: left;
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+            border: 1px dashed var(--red);
+        }
+
+        .receipt-data p {
+            margin: 8px 0;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 5px;
+        }
+        
+        .receipt-data b { color: var(--red-strong); margin-right: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="background">
+    <div class="nav-header">
+        <a href="index.html" class="home-link">← Return to Main Page</a>
+    </div>
+
+    <div class="container">
+        <h2>CLAIMED ITEMS</h2>
+        <div id="claimedList"></div>
+    </div>
+</div>
+
+<div id="appealModal" class="modal">
+    <div class="modal-box">
+        <h3 style="margin-top:0; font-weight:900;">APPEAL ITEM</h3>
+        <p style="font-size:12px; opacity:0.7; margin-bottom:20px;">Provide your student number to verify ownership appeal.</p>
+        <input id="appealStudent" placeholder="Student Number (e.g. 202X-XXXXX-MN-0)">
+        <input id="appealName" placeholder="Student Name" disabled style="opacity: 0.5;">
+        <textarea id="appealReason" maxlength="200" placeholder="Reason for appeal (max 200 characters)"></textarea>
+        <button id="submitAppeal">SUBMIT APPEAL</button>
+        <button onclick="closeModals()" style="background:transparent; box-shadow:none; font-size:11px; margin-top:10px; opacity:0.5;">CANCEL</button>
+    </div>
+</div>
+
+<div id="ticketModal" class="modal">
+    <div class="modal-box">
+        <h3 style="margin-top:0; font-weight:900; color:var(--red);">APPEAL TICKET</h3>
+        <div class="receipt-data">
+            <p><b>TICKET ID:</b> <span id="r_ticketId"></span></p>
+            <p><b>ITEM:</b> <span id="r_itemName"></span></p>
+            <p><b>APPELLANT:</b> <span id="r_appellant"></span></p>
+            <p><b>DATE:</b> <span id="r_date"></span></p>
+        </div>
+        <p style="font-size:11px; opacity:0.7; line-height:1.6;">
+            Your appeal has been logged. The Student Council will review the case against the current claim.
+        </p>
+        <button onclick="closeTicket()">CLOSE</button>
+    </div>
+</div>
+
+<script src="claimed_items.js"></script>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Items – PUPSMB DIGILOF</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --red: #8c1d18;
+            --red-strong: #a32620;
+            --red-glow: rgba(180, 40, 40, 0.6);
+            --glass-red: rgba(140, 29, 24, 0.2);
+            --glass-dark: rgba(0, 0, 0, 0.6);
+            --accent-white: rgba(255, 255, 255, 0.1);
+        }
+
+        * { 
+            box-sizing: border-box; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+            background: #000;
+            overflow-x: hidden;
+        }
+
+        .background {
+            min-height: 100vh;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05), rgba(0,0,0,0.9)),
+                        linear-gradient(rgba(100,0,0,0.6), rgba(100,0,0,0.6)),
+                        url('images/DSA.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 40px 20px;
+        }
+
+        /* RETURN BUTTON STYLES */
+        .nav-header {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .home-link {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 12px 24px;
+            border-radius: 15px;
+            background: var(--glass-red);
+            border: 1px solid var(--accent-white);
+            backdrop-filter: blur(10px);
+        }
+
+        .home-link:hover {
+            color: #fff;
+            background: var(--red);
+            border-color: var(--red);
+            transform: translateX(-5px);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            background: var(--glass-red);
+            padding: 40px;
+            border-radius: 40px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--accent-white);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .title {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            background: linear-gradient(to bottom, #fff 50%, var(--red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar input, .filter-bar select {
+            padding: 15px 25px;
+            border-radius: 20px;
+            border: 1px solid var(--accent-white);
+            background: var(--glass-dark);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .filter-bar input { flex: 2; min-width: 280px; }
+        .filter-bar select { flex: 1; min-width: 180px; cursor: pointer; }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .item-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--accent-white);
+            padding: 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .item-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+
+        .item-card h4 { margin: 0 0 10px 0; font-size: 18px; font-weight: 700; }
+
+        .item-meta {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 5px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 15px;
+        }
+
+        .claim-btn, .edit-trigger-btn {
+            padding: 12px;
+            border-radius: 15px;
+            border: none;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .claim-btn { background: var(--red); color: #fff; flex: 2; }
+        .edit-trigger-btn { background: rgba(255,255,255,0.1); color: #fff; flex: 1; border: 1px solid var(--accent-white); }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(15px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .modal-card {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(20,20,20,0.95);
+            padding: 40px;
+            border-radius: 40px;
+            border: 1px solid var(--red);
+            box-shadow: 0 0 60px rgba(140,29,24,0.5);
+        }
+
+        .modal-title { font-size: 28px; font-weight: 900; text-align: center; margin-bottom: 25px; }
+
+        .modal-form label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .modal-form input, .modal-form select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid var(--accent-white);
+            background: rgba(0,0,0,0.4);
+            color: #fff;
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+            outline: none;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 20px;
+            border: none;
+            background: var(--red);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .back-btn:hover {
+            color: #fff !important;
+        }
+
+        .claim-receipt { display: none; background: rgba(255,255,255,0.05); padding: 30px; border-radius: 25px; border: 1px dashed var(--red); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+
+<body>
+    
+<div class="background">
+    <!-- NAVIGATION HEADER -->
+    <div class="nav-header">
+        <a href="index.html" class="home-link">← Return to Main Page</a>
+    </div>
+
+    <div class="container">
+        <div class="title">Available Items</div>
+        
+        <div class="filter-bar">
+            <input 
+                id="searchInput" 
+                type="search" 
+                placeholder="Search by item name..." 
+                autocomplete="off" 
+                name="q_search_unique" 
+                spellcheck="false">
+            <select id="filterCategory">
+                <option value="">All Categories</option>
+                <option>Electronics</option>
+                <option>Documents</option>
+                <option>Personal Belongings</option>
+            </select>
+            <select id="filterLocation">
+                <option value="">All Locations</option>
+                <optgroup label="OPEN AREAS">
+                    <option>HALLWAY</option><option>OPEN GROUNDS</option><option>KALESA</option>
+                    <option>GYM</option><option>BENCH</option><option>SCHOOL PARKING</option>
+                    <option>CANTEEN</option><option>MPH</option><option>STUDENT LOUNGE</option>
+                </optgroup>
+                <optgroup label="1ST FLOOR">
+                    <option>AVR</option><option>CHEMLAB</option><option>COMLAB1</option>
+                    <option>COMLAB2</option><option>LIBRARY</option>
+                </optgroup>
+                <optgroup label="2ND FLOOR">
+                    <option>201</option><option>202</option><option>203</option><option>204</option>
+                </optgroup>
+            </select> 
+        </div>
+
+        <div class="items-grid" id="itemsGrid"></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="claimModal">
+    <div class="modal-card">
+        <div class="modal-title">CLAIM AUTHENTICATION</div>
+        <div class="modal-content" id="modalMainContent" style="display: flex; gap: 30px;">
+            <div style="flex: 1;">
+                <video id="video" autoplay style="width: 100%; border-radius: 20px; border: 2px solid var(--red);"></video>
+                <button class="confirm-btn" id="captureBtn" style="margin-top: 15px;">CAPTURE FACE ID</button>
+            </div>
+            <div class="modal-form" style="flex: 1;">
+                <label>Student Number</label>
+                <input id="claimerStudent" placeholder="202XXXXXXSM0">
+                <label>Legal Name</label>
+                <input id="claimerName" placeholder="Waiting for record..." disabled>
+                <button class="confirm-btn" id="confirmClaim">CONFIRM CLAIM</button>
+                <button class="back-btn" onclick="location.reload()" style="background:none; border:none; color:#777; width:100%; margin-top:15px; cursor:pointer;">CANCEL</button>
+            </div>
+        </div>
+        <div class="claim-receipt" id="claimReceipt">
+            <h3 style="text-align: center; color: var(--red);">CLAIM SUCCESSFUL</h3>
+            <div id="receiptDetails">
+                <p><strong>Claim ID:</strong> <span id="r_claimId"></span></p>
+                <p><strong>Item:</strong> <span id="r_itemName"></span></p>
+                <p><strong>Claimed By:</strong> <span id="r_name"></span></p>
+            </div>
+            <button class="confirm-btn" onclick="window.location.reload()">CLOSE</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="editModal">
+    <div class="modal-card">
+        <div class="modal-title">EDIT ITEM</div>
+        <div id="editValidationStep">
+            <div class="modal-form">
+                <label>Item ID</label>
+                <input id="editItemId" readonly>
+                <label>Original Student Number</label>
+                <input id="editStudentId" placeholder="202XXXXXXSM0">
+                <label>Submission Password</label>
+                <input type="password" id="editPassword" placeholder="••••••••">
+                <button class="confirm-btn" id="verifyEditBtn">VERIFY & EDIT</button>
+                <button class="back-btn" onclick="location.reload()" style="background:none; border:none; color:#777; width:100%; margin-top:15px; cursor:pointer;">CANCEL</button>
+            </div>
+        </div>
+        <div id="editFormStep" style="display: none;">
+            <div class="modal-form">
+                <label>Item Name</label>
+                <input id="new_itemName">
+                
+                <label>Category</label>
+                <select id="new_category">
+                    <option>Electronics</option>
+                    <option>Documents</option>
+                    <option>Personal Belongings</option>
+                </select>
+
+                <label>Location</label>
+                <select id="new_location">
+                    <option value="">Select Location</option>
+                    <optgroup label="OPEN AREAS">
+                        <option>HALLWAY</option><option>OPEN GROUNDS</option>
+                        <option>KALESA</option><option>GYM</option><option>BENCH</option>
+                        <option>SCHOOL PARKING</option><option>CANTEEN</option>
+                        <option>MPH</option><option>STUDENT LOUNGE</option>
+                    </optgroup>
+                    <optgroup label="1ST FLOOR - FACILITIES">
+                        <option>AVR</option><option>CHEMLAB</option><option>COMLAB1</option>
+                        <option>COMLAB2</option><option>LIBRARY</option><option>MINI HOTEL</option>
+                        <option>LEFT WING FEMALE CR</option><option>RIGHT WING FEMALE CR</option>
+                        <option>LEFT WING MALE CR</option><option>RIGHT WING MALE CR</option>
+                    </optgroup>
+                    <optgroup label="2ND FLOOR - FACILITIES">
+                        <option>2F LEFT WING FEMALE CR</option><option>2F RIGHT WING FEMALE CR</option>
+                        <option>2F LEFT WING MALE CR</option><option>2F RIGHT WING MALE CR</option>
+                        <option>201</option><option>202</option><option>203</option>
+                        <option>204</option><option>205</option><option>206</option>
+                        <option>207</option><option>208</option><option>209</option>
+                        <option>210</option><option>VERANDA</option>
+                    </optgroup>
+                </select>
+                
+                <button class="confirm-btn" id="saveEditBtn">SAVE CHANGES</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="view_items.js"></script>
+</body>
+</html>
