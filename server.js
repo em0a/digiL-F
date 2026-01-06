@@ -6,9 +6,7 @@ const multer = require('multer');
 const app = express();
 const PORT = 3000;
 
-/* ===============================
-   PATHS
-=============================== */
+/* paths */
 const DATA_DIR = path.join(__dirname, 'data');
 const ITEMS_FILE = path.join(DATA_DIR, 'items.json');
 const CLAIMED_FILE = path.join(DATA_DIR, 'claimed_items.json');
@@ -17,9 +15,7 @@ const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const SUBMITTED_DIR = path.join(UPLOADS_DIR, 'submitted');
 const CLAIMED_DIR = path.join(UPLOADS_DIR, 'claimed');
 
-/* ===============================
-   ENSURE FILES & DIRS
-=============================== */
+/* files */
 function ensureDir(dir) {
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
@@ -34,17 +30,16 @@ ensureDir(CLAIMED_DIR);
 ensureFile(ITEMS_FILE);
 ensureFile(CLAIMED_FILE);
 
-/* ===============================
-   MIDDLEWARE
-=============================== */
+/* middleware*/
 app.use(express.json());
 app.use(express.static('public'));
 // Ensure uploads are served so images show up
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-/* ===============================
-   MULTER (SEPARATE INSTANCES)
-=============================== */
+// Serve models for face-api.js
+app.use('/models', express.static(path.join(__dirname, 'models')));  // Add this line
+
+/* backend */
 const submitUpload = multer({
     storage: multer.diskStorage({
         destination: SUBMITTED_DIR,
@@ -63,9 +58,7 @@ const claimUpload = multer({
     })
 });
 
-/* ===============================
-   HELPERS
-=============================== */
+/* helpers */
 function readJSON(file) {
     try {
         return JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -77,11 +70,9 @@ function writeJSON(file, data) {
     fs.writeFileSync(file, JSON.stringify(data, null, 2));
 }
 
-/* ===============================
-   ROUTES
-=============================== */
+/* routes */
 
-// SUBMIT ITEM
+// submit
 app.post('/api/submit', submitUpload.single('photo'), (req, res) => {
     const items = readJSON(ITEMS_FILE);
     const newItem = {
@@ -104,7 +95,6 @@ app.get('/api/items', (req, res) => {
     res.json(readJSON(ITEMS_FILE));
 });
 
-// EDIT ITEM (THIS IS THE FIX FOR THE 404 ERROR)
 app.put('/api/items/:id', (req, res) => {
     const itemId = Number(req.params.id);
     const updatedFields = req.body;
@@ -161,9 +151,7 @@ app.post('/api/claim/:id', claimUpload.single('photo'), (req, res) => {
     res.json(claimedItem);
 });
 
-/* ===============================
-   START SERVER
-=============================== */
+/* server start */
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
