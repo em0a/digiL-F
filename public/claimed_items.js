@@ -5,7 +5,6 @@ const ticketModal = document.getElementById('ticketModal');
 let selectedClaim = null;
 let STUDENTS = {};
 
-/* 1. LOAD STUDENT CSV FOR VALIDATION */
 fetch('/students.csv')
     .then(res => res.text())
     .then(text => {
@@ -20,7 +19,6 @@ fetch('/students.csv')
         });
     });
 
-/* 2. AUTO-VALIDATE STUDENT NUMBER IN MODAL */
 document.getElementById('appealStudent').oninput = (e) => {
     const sn = e.target.value.trim();
     const nameField = document.getElementById('appealName');
@@ -33,7 +31,6 @@ document.getElementById('appealStudent').oninput = (e) => {
     }
 };
 
-/* 3. LOAD CLAIMED ITEMS */
 fetch('/api/claimed-items')
     .then(res => res.json())
     .then(items => {
@@ -44,7 +41,6 @@ fetch('/api/claimed-items')
 
         claimedList.innerHTML = '';
         items.forEach(item => {
-            // FIX: Format Date nicely (Date + Time)
             const rawDate = item.claimDate || item.date || item.created_at;
             const dateStr = rawDate 
                 ? new Date(rawDate).toLocaleDateString() + ' ' + new Date(rawDate).toLocaleTimeString()
@@ -76,7 +72,6 @@ fetch('/api/claimed-items')
         });
     });
 
-/* 4. SUBMIT APPEAL & SHOW RECEIPT */
 document.getElementById('submitAppeal').onclick = () => {
     const sn = document.getElementById('appealStudent').value.trim();
     const reason = document.getElementById('appealReason').value.trim();
@@ -90,7 +85,6 @@ document.getElementById('submitAppeal').onclick = () => {
         return;
     }
 
-    // Populate Receipt
     document.getElementById('r_ticketId').textContent = "APP-" + Date.now();
     document.getElementById('r_itemName').textContent = selectedClaim.name;
     document.getElementById('r_appellant').textContent = STUDENTS[sn] + ` (${sn})`;
