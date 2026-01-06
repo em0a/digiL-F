@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1767687791447,
+    "studentNumber": "202400315SM0",
+    "password": "password",
+    "name": "Mini Fan",
+    "category": "Electronics & Gadgets",
+    "location": "Student Lounge",
+    "photo": "/uploads/submitted/1767687791446-item.jpg",
+    "dateSubmitted": "2026-01-06T08:23:11.447Z"
+  },
+  {
+    "id": 1767688968075,
+    "studentNumber": "202400315SM0",
+    "password": "password",
+    "name": "ballpen",
+    "category": "Documents & School Supplies",
+    "location": "Veranda",
+    "photo": "/uploads/submitted/1767688968074-item.jpg",
+    "dateSubmitted": "2026-01-06T08:42:48.075Z"
+  },
+  {
+    "id": 1767689019922,
+    "studentNumber": "202400276SM0",
+    "password": "password",
+    "name": "Bluetooth Speaker",
+    "category": "Electronics & Gadgets",
+    "location": "Kalesa",
+    "photo": "/uploads/submitted/1767689019921-item.jpg",
+    "dateSubmitted": "2026-01-06T08:43:39.922Z"
+  },
+  {
+    "id": 1767689650135,
+    "studentNumber": "202400309SM0",
+    "password": "passsword",
+    "name": "Wallet",
+    "category": "Personal Valuables & Accessories",
+    "location": "Restrooms F Left",
+    "photo": "/uploads/submitted/1767689650134-item.jpg",
+    "dateSubmitted": "2026-01-06T08:54:10.135Z"
+  },
+  {
+    "id": 1767689763954,
+    "studentNumber": "202400270SM0",
+    "password": "password",
+    "name": "Breadboard",
+    "category": "Electronics & Gadgets",
+    "location": "Chem Lab",
+    "photo": "/uploads/submitted/1767689763954-item.jpg",
+    "dateSubmitted": "2026-01-06T08:56:03.954Z"
+  },
+  {
+    "id": 1767689823330,
+    "studentNumber": "202400282SM0",
+    "password": "password",
+    "name": "Scientific Calculator",
+    "category": "Electronics & Gadgets",
+    "location": "Rooms 208",
+    "photo": "/uploads/submitted/1767689823329-item.jpg",
+    "dateSubmitted": "2026-01-06T08:57:03.330Z"
+  },
+  {
+    "id": 1767689892763,
+    "studentNumber": "202400275SM0",
+    "password": "password",
+    "name": "Motorcycle Keys",
+    "category": "Personal Valuables & Accessories",
+    "location": "School Parking",
+    "photo": "/uploads/submitted/1767689892762-item.jpg",
+    "dateSubmitted": "2026-01-06T08:58:12.763Z"
+  },
+  {
+    "id": 1767690007718,
+    "studentNumber": "202400314SM0",
+    "password": "password",
+    "name": "Umbrella",
+    "category": "Daily Essentials & Misc.",
+    "location": "Rooms 201",
+    "photo": "/uploads/submitted/1767690007717-item.jpg",
+    "dateSubmitted": "2026-01-06T09:00:07.718Z"
+  },
+  {
+    "id": 1767690053871,
+    "studentNumber": "202400303SM0",
+    "password": "password",
+    "name": "Cellphone",
+    "category": "Electronics & Gadgets",
+    "location": "Student Lounge",
+    "photo": "/uploads/submitted/1767690053870-item.jpg",
+    "dateSubmitted": "2026-01-06T09:00:53.871Z"
+  },
+  {
+    "id": 1767690109855,
+    "studentNumber": "202400311SM0",
+    "password": "password",
+    "name": "Tumbler",
+    "category": "Daily Essentials & Misc.",
+    "location": "Library",
+    "photo": "/uploads/submitted/1767690109854-item.jpg",
+    "dateSubmitted": "2026-01-06T09:01:49.855Z"
+  }
+]
