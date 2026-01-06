@@ -1,35 +1,30 @@
-// GLOBAL SAFETY CHECK
 if (window.HAS_INITIALIZED_VIEW_ITEMS) {
     throw new Error("Script stopped to prevent double-loading.");
 }
 window.HAS_INITIALIZED_VIEW_ITEMS = true;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // UI Elements
     const itemsGrid = document.getElementById('itemsGrid');
     const searchInput = document.getElementById('searchInput');
     const filterCategory = document.getElementById('filterCategory');
     const filterLocation = document.getElementById('filterLocation');
-
-    // Modals
+    
     const claimModal = document.getElementById('claimModal');
     const editModal = document.getElementById('editModal');
     
-    // Claim Elements
     const video = document.getElementById('video');
     const captureBtn = document.getElementById('captureBtn');
-    let confirmClaimBtn = document.getElementById('confirmClaim'); 
+    let confirmClaimBtn = document.getElementById('confirmClaim');
+    
     const claimerStudent = document.getElementById('claimerStudent');
     const claimerName = document.getElementById('claimerName');
     const receiptSection = document.getElementById('claimReceipt');
     const mainContent = document.getElementById('modalMainContent');
-
-    // Edit Elements
+    
     const editValidationStep = document.getElementById('editValidationStep');
     const editFormStep = document.getElementById('editFormStep');
     const newLocationSelect = document.getElementById('new_location');
-
-    // State Variables
+    
     let ALL_ITEMS = [];
     let STUDENTS = {};
     let selectedItem = null;
@@ -37,10 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let capturedBlob = null;
     let isCameraActive = false;
     let modelsLoaded = false;
+    let isClaimInProgress = false;
+    let hasClaimSucceeded = false;
     
-    let isClaimInProgress = false; 
-    let hasClaimSucceeded = false; 
-
     async function loadModels() {
         try {
             console.log("Loading AI Models...");
@@ -88,36 +82,32 @@ document.addEventListener('DOMContentLoaded', () => {
     filterCategory.addEventListener('change', applyFilters);
     filterLocation.addEventListener('change', applyFilters);
 
-        function renderItems(items) {
-                itemsGrid.innerHTML = '';
-                items.forEach(item => {
-                    const rawDate = item.dateSubmitted || item.date || item.created_at || item.timestamp;
-                    
-                    const dateStr = rawDate 
-                        ? new Date(rawDate).toLocaleDateString() + ' ' + new Date(rawDate).toLocaleTimeString()
-                        : "Date not available";
+    function renderItems(items) {
+        itemsGrid.innerHTML = '';
+        items.forEach(item => {
+            const rawDate = item.dateSubmitted || item.date || item.created_at || item.timestamp;
+            const dateStr = rawDate 
+                ? new Date(rawDate).toLocaleDateString() + ' ' + new Date(rawDate).toLocaleTimeString()
+                : "Date not available";
 
-                    const card = document.createElement('div');
-                    card.className = 'item-card';
-                    card.innerHTML = `
-                        <img src="${item.photo || 'images/no-image.png'}">
-                        <h4>${item.name}</h4>
-                        <div class="item-meta">ID: ${item.id}</div>
-                        <div class="item-meta">${item.category} • ${item.location}</div>
-                        
-                        <div class="item-meta" style="color: #fff; font-weight: bold; margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">
-                        Submitted: ${dateStr}
-                        </div>
-
-                        <div class="card-actions">
-                            <button class="btn btn-claim" data-id="${item.id}">CLAIM</button>
-                            <button class="btn btn-edit" data-id="${item.id}">EDIT</button>
-                        </div>
-                    `;
-                    itemsGrid.appendChild(card);
-                });
-            }
-
+            const card = document.createElement('div');
+            card.className = 'item-card';
+            card.innerHTML = `
+                <img src="${item.photo || 'images/no-image.png'}">
+                <h4>${item.name}</h4>
+                <div class="item-meta">ID: ${item.id}</div>
+                <div class="item-meta">${item.category} • ${item.location}</div>
+                <div class="item-meta" style="color: #fff; font-weight: bold; margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">
+                    Submitted: ${dateStr}
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-claim" data-id="${item.id}">CLAIM</button>
+                    <button class="btn btn-edit" data-id="${item.id}">EDIT</button>
+                </div>
+            `;
+            itemsGrid.appendChild(card);
+        });
+    }
 
     itemsGrid.addEventListener('click', (e) => {
         const target = e.target;
@@ -135,12 +125,12 @@ document.addEventListener('DOMContentLoaded', () => {
         isClaimInProgress = false;
         hasClaimSucceeded = false;
         capturedBlob = null;
-        
+
         claimModal.style.display = 'flex';
         mainContent.style.display = 'flex';
         receiptSection.style.display = 'none';
         claimModal.querySelector('.modal-title').innerText = "CLAIM AUTHENTICATION";
-        
+
         confirmClaimBtn.innerText = "CONFIRM CLAIM";
         confirmClaimBtn.disabled = false;
         confirmClaimBtn.style.opacity = "1";
@@ -159,11 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 video: { facingMode: 'user', width: 640, height: 480 } 
             });
-            
+
             video.srcObject = stream;
             cameraStream = stream;
             isCameraActive = true;
-            
+
             video.onloadedmetadata = () => {
                 video.play();
                 detectFacePresence();
@@ -213,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.width = video.videoWidth; 
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0);
-        
+
         canvas.toBlob(b => { 
             capturedBlob = b; 
             captureBtn.innerText = "FACE ID SECURED ✓";
@@ -234,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     confirmClaimBtn.onclick = async (e) => {
         e.preventDefault();
-        
+
         const finalStudentNumber = claimerStudent.value;
         const finalName = claimerName.value; 
 
@@ -246,11 +236,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         isClaimInProgress = true;
-        
+
         confirmClaimBtn.innerText = "PROCESSING...";
         confirmClaimBtn.disabled = true;
         confirmClaimBtn.style.opacity = "0.7";
-        
+
         const fd = new FormData();
         fd.append('claimerStudent', finalStudentNumber);
         fd.append('claimerName', finalName); 
@@ -258,16 +248,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const res = await fetch(`/api/claim/${selectedItem.id}`, { method: 'POST', body: fd });
-            
+
             if(res.ok) {
                 const data = await res.json();
                 hasClaimSucceeded = true; 
 
-                // Show Receipt
                 mainContent.style.display = 'none'; 
                 claimModal.querySelector('.modal-title').innerText = "CLAIM SUCCESSFUL";
                 receiptSection.style.display = 'block';
-                
+
                 document.getElementById('r_claimId').textContent = data.claimId || "N/A";
                 document.getElementById('r_itemName').textContent = selectedItem.name;
                 document.getElementById('r_location').textContent = selectedItem.location;
@@ -283,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.error(err);
             alert("Claim failed. Please try again.");
-            
+
             isClaimInProgress = false;
             confirmClaimBtn.innerText = "CONFIRM CLAIM";
             confirmClaimBtn.disabled = false;
@@ -298,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editValidationStep.style.display = 'block';
         editFormStep.style.display = 'none';
     }
-    
+
     window.closeModal = () => location.reload();
 
     const verifyBtn = document.getElementById('verifyEditBtn');
@@ -310,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(sID === selectedItem.studentNumber && pass === selectedItem.password) {
                 editValidationStep.style.display = 'none';
                 editFormStep.style.display = 'block';
-                
+
                 document.getElementById('new_itemName').value = selectedItem.name;
                 document.getElementById('new_category').value = selectedItem.category;
                 newLocationSelect.value = selectedItem.location;
